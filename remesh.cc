@@ -16,10 +16,8 @@
  * under the License.
  */
 
-// This code uses CGAL that is licensed under the GPL. No good
-// geometry library under a different license exists, as VCG is also
-// GPL. This implements a standalone tool, not connect to the rest of
-// Astrobee.
+// This code uses CGAL that is licensed under the GPL. This implements
+// a standalone tool, not connect to the rest of Astrobee.
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Advancing_front_surface_reconstruction.h>

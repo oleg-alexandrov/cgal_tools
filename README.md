@@ -55,5 +55,18 @@ We assume a system that has Boost, Eigen3, MPFR, GMP, and GFlags.
     -num_iterations 1 -smoothing_time 0.0001
 ```
 
-It is very strongly recommended to do these procedures first on small meshes to get a feel for how they work.
+Remove small connected components from the mesh:
+
+
+```
+  ~/projects/cgal_tools/build/rm_connected_components        \
+    -input_mesh in_mesh.ply -output_mesh out_mesh.ply        \
+    -num_components_to_keep 5 -num_min_faces_in_component 100
+```
+
+Note that the above command may remove too much of the mesh if being
+overly aggressive.
+
+It is very strongly recommended to do these procedures first on small
+meshes to get a feel for how they work.
 

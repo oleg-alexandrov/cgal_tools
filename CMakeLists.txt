@@ -31,5 +31,6 @@ include( ${EIGEN3_USE_FILE} )
 create_single_source_cgal_program("remesh.cc")
 create_single_source_cgal_program("smoothe_mesh.cc")
 create_single_source_cgal_program("fill_holes.cc")
-
+create_single_source_cgal_program("rm_connected_components.cc")
+create_single_source_cgal_program("repair_mesh.cc")
 

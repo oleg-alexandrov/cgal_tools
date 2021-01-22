@@ -16,10 +16,8 @@
  * under the License.
  */
 
-// This code uses CGAL that is licensed under the GPL. No good
-// geometry library under a different license exists, as VCG is also
-// GPL. This implements a standalone tool, not connect to the rest of
-// Astrobee.
+// This code uses CGAL that is licensed under the GPL. This implements
+// a standalone tool, not connect to the rest of Astrobee.
 
 #define CGAL_PMP_SMOOTHING_VERBOSE
 
@@ -79,7 +77,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  std::cout << "Reading " << FLAGS_input_mesh << std::endl;
+  std::cout << "Reading: " << FLAGS_input_mesh << std::endl;
   std::ifstream in(FLAGS_input_mesh);
 
   std::cout << "Number of iterations: " << FLAGS_num_iterations << "\n";
@@ -89,7 +87,6 @@ int main(int argc, char* argv[]) {
   std::vector< std::vector<std::size_t> > polygons;
   std::vector<CGAL::Color> fcolors;
   std::vector<CGAL::Color> vcolors;
-  std::cout << "Reading: " << FLAGS_input_mesh << std::endl;
   if (!in || !CGAL::read_PLY(in, points, polygons, fcolors, vcolors) || points.empty()) {
     std::cerr << "Cannot open file: " << FLAGS_input_mesh << std::endl;
     return EXIT_FAILURE;
