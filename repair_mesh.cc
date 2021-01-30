@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  std::cout << "Reading " << FLAGS_input_mesh << std::endl;
+  std::cout << "Reading: " << FLAGS_input_mesh << std::endl;
   std::ifstream in(FLAGS_input_mesh);
 
   std::vector<Kernel::Point_3> points;
