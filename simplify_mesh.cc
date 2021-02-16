@@ -16,7 +16,7 @@ DEFINE_string(input_mesh, "",
 DEFINE_string(output_mesh, "",
               "The output mesh file.");
 DEFINE_double(edge_keep_ratio, 0.2,
-              "Stop when the number of edges is this this fraction of the original.");
+              "Simply the mesh keeping only this fraction of the original edges.");
 
 typedef CGAL::Simple_cartesian<double>               Kernel;
 typedef Kernel::Point_3                              Point_3;
@@ -49,11 +49,11 @@ int main(int argc, char** argv) {
   int r = SMS::edge_collapse(surface_mesh, stop);
   std::chrono::steady_clock::time_point end_time = std::chrono::steady_clock::now();
 
-  std::cout << "\nFinished!\n" << r << " edges removed.\n"
-            << surface_mesh.number_of_edges() << " final edges.\n";
-  std::cout << "Time elapsed: "
-            << std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count()
-            << "ms" << std::endl;
+  std::cout << "Edges removed: " << r << ".\n"
+            << "Edges left: " << surface_mesh.number_of_edges() << ".\n";
+  //d::cout << "Time elapsed: "
+  //        << std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count()
+  //        << "ms" << std::endl;
 
   // Without this the mesh will be invalid
   surface_mesh.collect_garbage();
