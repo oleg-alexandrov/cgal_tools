@@ -24,28 +24,12 @@
 #include <CGAL/Polygon_mesh_processing/connected_components.h>
 #include <boost/function_output_iterator.hpp>
 #include <boost/property_map/property_map.hpp>
-#include <CGAL/IO/PLY_reader.h>
-#include <CGAL/IO/PLY_writer.h>
-#include <CGAL/Polygon_mesh_processing/orient_polygon_soup.h>
-#include <CGAL/Polygon_mesh_processing/polygon_soup_to_polygon_mesh.h>
-#include <CGAL/Polygon_mesh_processing/repair_polygon_soup.h>
+#include <CGAL/IO/PLY.h>
+#include <CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h>
 
 #include <iostream>
 #include <fstream>
 #include <map>
-
-#include <gflags/gflags.h>
-
-DEFINE_string(input_mesh, "",
-              "The input mesh file.");
-DEFINE_string(output_mesh, "",
-              "The output mesh file.");
-
-DEFINE_int32(num_min_faces_in_component, -1,
-             "Keep only connected mesh components with at least this many faces.");
-
-DEFINE_int32(num_components_to_keep, -1,
-             "How many of the largest connected components of the mesh to keep. Being too aggressive here can result in a mesh with missing parts.");
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 typedef Kernel::Point_3                                     Point;
@@ -94,31 +78,37 @@ struct Put_true {
 };
 
 int main(int argc, char* argv[]) {
-  gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-  if (FLAGS_input_mesh == "" || FLAGS_output_mesh == "") {
+  if (argc < 5) {
+    std::cout << "Usage: " << argv[0]
+              << "  num_min_faces_in_component num_components_to_keep input.ply output.ply\n";
+
+    return 1;
+  }
+  
+  int num_min_faces_in_component = atoi(argv[1]);
+  int num_components_to_keep     = atoi(argv[2]);
+  const char* input_file         = argv[3];
+  const char* output_file        = argv[4];
+
+  std::cout << "Reading mesh:       " << input_file << std::endl;
+  std::cout << "Max num hole edges: " << num_min_faces_in_component << "\n";
+  std::cout << "Max hole diameter:  " << num_components_to_keep << "\n";
+  
+
+
+  if (std::string(input_file) == "" || std::string(output_file) == "") {
     std::cout << "The input and/or output mesh was not specified." << std::endl;
     return 1;
   }
   
-  std::cout << "Reading: " << FLAGS_input_mesh << std::endl;
-  std::ifstream in(FLAGS_input_mesh);
+  std::cout << "Reading: " << input_file << std::endl;
 
-  // Read the mesh
-  std::vector<Kernel::Point_3> points;
-  std::vector< std::vector<std::size_t> > polygons;
-  std::vector<CGAL::Color> fcolors;
-  std::vector<CGAL::Color> vcolors;
-  if (!in || !CGAL::read_PLY(in, points, polygons, fcolors, vcolors) || points.empty()) {
-    std::cout << "Cannot open file: " << FLAGS_input_mesh << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  // Clean up the mesh
   Mesh mesh;
-  PMP::repair_polygon_soup(points, polygons);
-  PMP::orient_polygon_soup(points, polygons);
-  PMP::polygon_soup_to_polygon_mesh(points, polygons, mesh);
+  if(!PMP::IO::read_polygon_mesh(input_file, mesh)) {
+    std::cerr << "Invalid input." << std::endl;
+    return 1;
+  }
   
   typedef boost::graph_traits<Mesh>::face_descriptor face_descriptor;
   const double bound = std::cos(0.75 * CGAL_PI);
@@ -155,29 +145,27 @@ int main(int argc, char* argv[]) {
   // }
   
   // Keep only components with at least this many faces
-  if (FLAGS_num_min_faces_in_component > 0) {
+  if (num_min_faces_in_component > 0) {
     PMP::keep_large_connected_components
-      (mesh, FLAGS_num_min_faces_in_component,
+      (mesh, num_min_faces_in_component,
        PMP::parameters::edge_is_constrained_map(Constraint<Mesh>(mesh, bound)));
     
     // Without this the mesh will be invalid
     mesh.collect_garbage();
   }
   
-  if (FLAGS_num_components_to_keep > 0) {
+  if (num_components_to_keep > 0) {
     PMP::keep_largest_connected_components
-      (mesh, FLAGS_num_components_to_keep,
+      (mesh, num_components_to_keep,
        PMP::parameters::edge_is_constrained_map(Constraint<Mesh>(mesh, bound)));
 
     // Without this the mesh will be invalid
     mesh.collect_garbage();
   }
   
-  // Save the processed mesh
-  std::cout << "Writing: " << FLAGS_output_mesh << std::endl;
-  std::ofstream out(FLAGS_output_mesh);
-  out.precision(17);
-  CGAL::write_PLY(out, mesh);
+  std::cout << "Writing output mesh: " << output_file << std::endl;
+  CGAL::IO::write_PLY(output_file, mesh,
+                      CGAL::parameters::stream_precision(17).use_binary_mode(false));
   
   return 0;
 }

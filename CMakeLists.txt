@@ -1,38 +1,41 @@
-# Created by the script cgal_create_cmake_script
-# This is the CMake script for compiling a CGAL application.
+cmake_minimum_required(VERSION 3.1...3.20)
+project(Polygon_mesh_processing_Examples)
 
-cmake_minimum_required(VERSION 3.0)
+# CGAL and its components
+find_package(CGAL REQUIRED)
 
-project(cgal_tools)
+# Boost and its components
+find_package(Boost REQUIRED)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(Eigen3 REQUIRED)
-if (EIGEN3_FOUND)
-    message(STATUS "Eigen3 found.")
-else()
-    message(FATAL_ERROR "Eigen3 not found.")
+if(NOT Boost_FOUND)
+  message(STATUS "This project requires the Boost library, and will not be compiled.")
+  return()
 endif()
 
-include_directories(${EIGEN3_INCLUDE_DIR})
-set(BUILD_SHARED_LIBS ON)
+find_package(OpenMesh QUIET)
+if(OpenMesh_FOUND)
+  include(UseOpenMesh)
+else()
+  message(STATUS "Examples that use OpenMesh will not be compiled.")
+endif()
 
-find_package(Gflags REQUIRED)
-set(CGAL_3RD_PARTY_LIBRARIES ${GFLAGS_LIBRARIES})
+find_package(Eigen3 3.2.0) # requires 3.2.0 or greater
+include(CGAL_Eigen3_support)
 
-find_package(CGAL REQUIRED OPTIONAL_COMPONENTS Core)
+# Creating entries for all main programs
 
-set(EIGEN3_USE_FILE "UseEigen3")
-include( ${EIGEN3_USE_FILE} )
+if(TARGET CGAL::Eigen3_support)
+  create_single_source_cgal_program("fill_holes.cc")
+  target_link_libraries(fill_holes PUBLIC CGAL::Eigen3_support)
 
-create_single_source_cgal_program("test_cgal.cc")
-create_single_source_cgal_program("remesh.cc")
-create_single_source_cgal_program("simplify_mesh.cc")
-create_single_source_cgal_program("smoothe_mesh.cc")
-create_single_source_cgal_program("fill_holes.cc")
-create_single_source_cgal_program("rm_connected_components.cc")
-create_single_source_cgal_program("repair_mesh.cc")
+  create_single_source_cgal_program("smoothe_mesh.cc")
+  target_link_libraries(smoothe_mesh PUBLIC CGAL::Eigen3_support)
+  
+  create_single_source_cgal_program("rm_connected_components.cc")
+  target_link_libraries(rm_connected_components PUBLIC CGAL::Eigen3_support)
+
+  create_single_source_cgal_program("simplify_mesh.cc")
+  target_link_libraries(simplify_mesh PUBLIC CGAL::Eigen3_support)
+  
+endif()
 
