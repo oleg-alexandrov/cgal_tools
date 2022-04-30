@@ -1,17 +1,17 @@
-# cgal_tools
-
-This repository contains simple tools that use CGAL to remesh, smooth,
+This repository contains simple tools that use [CGAL](https://github.com/CGAL/cgal) to remesh, smoothe,
 and fill holes in meshes. They can be used under the same terms as
 CGAL itself, which is usually some mix of GPL and LGPL. Anything in
 this repository not strictly derived from CGAL (which does not amount
 to much) can be used under the Apache II license.
 
-## Prerequisites
+# Prerequisites
 
 We assume a system that has Boost, Eigen3, MPFR, and GMP. These can be
 installed with conda, if necessary.
 
-# Fetch GDAL. It is header-only so it need not be built.
+# Fetch GDAL 
+
+CGAL is header-only so it need not be built.
 
 ```
    mkdir -p $HOME/projects
@@ -37,8 +37,6 @@ installed with conda, if necessary.
 ```
 
 # Using the tools
-
-See the actual invocations of these tools in geometry_mapper.py.
 
 Mesh smoothing:
 
