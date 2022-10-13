@@ -91,19 +91,15 @@ int main(int argc, char* argv[]) {
   const char* input_file         = argv[3];
   const char* output_file        = argv[4];
 
-  std::cout << "Reading mesh:       " << input_file << std::endl;
-  std::cout << "Max num hole edges: " << num_min_faces_in_component << "\n";
-  std::cout << "Max hole diameter:  " << num_components_to_keep << "\n";
+  std::cout << "Reading mesh:               " << input_file << std::endl;
+  std::cout << "Num min faces in component: " << num_min_faces_in_component << "\n";
+  std::cout << "Num components to keep:     " << num_components_to_keep << "\n";
   
-
-
   if (std::string(input_file) == "" || std::string(output_file) == "") {
     std::cout << "The input and/or output mesh was not specified." << std::endl;
     return 1;
   }
   
-  std::cout << "Reading: " << input_file << std::endl;
-
   Mesh mesh;
   if(!PMP::IO::read_polygon_mesh(input_file, mesh)) {
     std::cerr << "Invalid input." << std::endl;
