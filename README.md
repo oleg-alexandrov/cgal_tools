@@ -1,5 +1,3 @@
-# cgal_tools
-
 This repository contains simple tools that use CGAL to remesh, smooth,
 and fill holes in meshes. They can be used under the same terms as
 CGAL itself, which is usually some mix of GPL and LGPL. Anything in
@@ -21,7 +19,9 @@ Type:
 
 and verify that it is found in the just-created environment.
 
-# Fetch GDAL. It is header-only so it need not be built.
+# Fetch GDAL
+
+CGAL is header-only so it need not be built.
 
 Note that CGAL version 5.3 is used (latest as of Fall 2021). 
 CGAL can break APIs between versions.
