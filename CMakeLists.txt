@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16...3.20)
+cmake_minimum_required(VERSION 3.15...3.20)
 project(Polygon_mesh_processing_Examples)
 
 # CGAL and its components
