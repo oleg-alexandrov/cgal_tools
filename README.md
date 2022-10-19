@@ -73,7 +73,7 @@ Remove small connected components from the mesh:
 Mesh simplification:
 
     edge_keep_ratio=0.2
-    cgal_tools/build/simplify_mesh_path $edge_keep_ratio \
+    cgal_tools/build/simplify_mesh $edge_keep_ratio \
       <input_mesh.ply> <output_mesh.ply>
 
 It is very strongly recommended to first run these tools on small
