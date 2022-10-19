@@ -1,6 +1,6 @@
 project(cgal_tools)
 
-cmake_minimum_required(VERSION 3.15...3.20)
+cmake_minimum_required(VERSION 3.10)
 
 # Fetch CGAL. Do not compile it.
 include(FetchContent)
