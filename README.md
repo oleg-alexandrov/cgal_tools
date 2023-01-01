@@ -47,7 +47,7 @@ Mesh smoothing:
 
     num_iter=1; smoothing_time=0.00005; smoothe_boundary=1
     cgal_tools/build/smoothe_mesh               \
-    $num_iter $smoothing_time $smoothe_boundary \
+      $num_iter $smoothing_time $smoothe_boundary \
       <input_mesh.ply> <output_mesh.ply>
 
 Note that the above command may remove too much of the mesh if being
